@@ -1,7 +1,9 @@
 export default function NotFound() {
     return (
-        <div>
-            404 - Page Not Found
+        <div className="login-signup-form">
+            <h1>
+                404 - Page Not Found
+            </h1>
         </div>
     )
 }

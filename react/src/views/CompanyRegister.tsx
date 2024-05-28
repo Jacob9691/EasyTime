@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function Signup() {
+export default function CompanyRegister() {
 
     const onSubmit = (ev: any) => {
         ev.preventDefault() 
@@ -11,17 +11,15 @@ export default function Signup() {
             <div className="form">
                 <form onSubmit={onSubmit}>
                     <h1 className="title">
-                        Create your account
+                        Register company
                     </h1>
-                    <input type="text" placeholder="Surname"/>
-                    <input type="text" placeholder="Lastname"/>
+                    <input type="text" placeholder="Company name"/>
                     <input type="email" placeholder="Email"/>
-                    <input type="number" placeholder="Company number"/>
                     <input type="password" placeholder="Password"/>
                     <input type="password" placeholder="Password confirmation"/>
-                    <button className="btn btn-block">Signup</button>
+                    <button className="btn btn-block">Register</button>
                     <p className="message">
-                        Already Registered? <Link to="/login">Sign in</Link>
+                        <Link to="/login">Back to sign in</Link>
                     </p>
                 </form>
             </div>
