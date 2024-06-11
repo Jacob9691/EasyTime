@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import {createRef, useState} from "react";
 import { Link } from "react-router-dom";
 import axiosClient from "../axios-client";
-import { useStateContext } from "../contexts/ContextProvider";
+import { useStateContext } from "../contexts/ContextProvider.tsx";
 
 interface SignupPayload {
     surname: string;
@@ -13,18 +13,19 @@ interface SignupPayload {
 }
 
 export default function Signup() {
-    const surnameRef = useRef<HTMLInputElement>(null);
-    const lastNameRef = useRef<HTMLInputElement>(null);
-    const emailRef = useRef<HTMLInputElement>(null);
-    const companyNumberRef = useRef<HTMLInputElement>(null);
-    const passwordRef = useRef<HTMLInputElement>(null);
-    const passwordConfirmationRef = useRef<HTMLInputElement>(null);
+    const surnameRef = createRef<HTMLInputElement>();
+    const lastNameRef = createRef<HTMLInputElement>();
+    const emailRef = createRef<HTMLInputElement>();
+    const companyNumberRef = createRef<HTMLInputElement>();
+    const passwordRef = createRef<HTMLInputElement>();
+    const passwordConfirmationRef = createRef<HTMLInputElement>();
 
+    const [errors, setErrors] = useState(null);
     const {setUser, setToken} = useStateContext();
 
     const onSubmit = (ev: any) => {
         ev.preventDefault()
-        
+
         const payload: SignupPayload = {
             surname: surnameRef.current?.value || "",
             last_name: lastNameRef.current?.value || "",
@@ -42,7 +43,7 @@ export default function Signup() {
             .catch(error => {
                 const response = error.response;
                 if (response && response.status === 422) {
-                    console.log(response.data.errors);
+                    setErrors(response.data.errors);
                 }
             })
     }
@@ -52,6 +53,12 @@ export default function Signup() {
             <h1 className="title">
                 Create your account
             </h1>
+            {errors && <div className="alert">
+                {Object.keys(errors).map(key => (
+                    <p key={key}>{errors[key][0]}</p>
+                ))}
+            </div>
+            }
             <input ref={surnameRef} type="text" placeholder="Surname"/>
             <input ref={lastNameRef} type="text" placeholder="Last name"/>
             <input ref={emailRef} type="email" placeholder="Email"/>
@@ -64,4 +71,4 @@ export default function Signup() {
             </p>
         </form>
     )
-}       
+}
