@@ -19,7 +19,7 @@ class AuthController extends Controller
         if (!Auth::attempt($credentials)) {
             return response([
                 'message' => 'Invalid login details'
-            ]);
+            ], 422);
         }
 
         /** @var User $user */
@@ -34,18 +34,31 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        /**@var User $user */
-        $user = User::create([
-            'surname' => $data['surname'],
-            'lastName' => $data['last_name'],
-            'email' => $data['email'],
-            'company' => $data['company_number'],
-            'password' => bcrypt($data['password']),
-        ]);
+        try {
+            // Attempt to create the user
+            /** @var User $user */
+            $user = User::query()->create([
+                'surname' => $data['surname'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'company_number' => $data['company_number'],
+                'password' => bcrypt($data['password'])
+            ]);
 
-        $token = $request->user()->createToken('main')->plainTextToken;
+            // Check if user creation was successful
+            if ($user) {
+                $user = $user->fresh();
 
-        return response(compact('user', 'token'));
+                // Create token for the new user
+                $token = $user->createToken('main')->plainTextToken;
+
+                return response()->json(compact('user', 'token'));
+            } else {
+                return response()->json(['message' => 'User creation failed'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred during signup', 'error' => $e->getMessage()], 500);
+        }
     }
 
     public function logout(Request $request)

@@ -17,12 +17,12 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
+    public $fillable = [
         'surname',
         'last_name',
         'email',
         'company_number',
-        'password',
+        'password'
     ];
 
     /**
@@ -30,7 +30,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $hidden = [
+    public $hidden = [
         'password',
         'remember_token',
     ];
@@ -40,7 +40,7 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    public function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',

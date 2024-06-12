@@ -23,7 +23,7 @@ export default function Signup() {
     const [errors, setErrors] = useState(null);
     const {setUser, setToken} = useStateContext();
 
-    const onSubmit = (ev: any) => {
+    const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
         ev.preventDefault()
 
         const payload: SignupPayload = {
