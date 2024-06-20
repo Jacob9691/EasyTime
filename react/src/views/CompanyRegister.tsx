@@ -1,7 +1,9 @@
-import { createRef, useState } from "react";
+// Imports til createRef, useState og FormEvent
+import { createRef, useState, FormEvent } from "react";
 import { Link } from "react-router-dom";
 import axiosClient from "../axios-client";
 
+// Interface til registreringspayload
 interface RegisterPayload {
     company_name: string;
     email: string;
@@ -9,17 +11,26 @@ interface RegisterPayload {
     phone: number;
 }
 
+// Komponent til virksomhedsregistrering
 export default function CompanyRegister() {
+    // Oprettelse af refs til inputfelter
     const companyNameRef = createRef<HTMLInputElement>();
     const emailRef = createRef<HTMLInputElement>();
     const addressRef = createRef<HTMLInputElement>();
     const phoneRef = createRef<HTMLInputElement>();
 
-    const [errors, setErrors] = useState(null);
+    // Tilstande til fejlbeskeder og notifikationer
+    const [errors, setErrors] = useState<any>(null);
+    const [notification, setNotification] = useState<string | null>(null);
 
-    const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
-        ev.preventDefault()
-        
+    // Funktion til håndtering af formularindsendelse
+    const onSubmit = (ev: FormEvent<HTMLFormElement>) => {
+        ev.preventDefault();
+
+        setErrors(null);  // Nulstiller fejlbeskeder
+        setNotification(null);  // Nulstiller notifikationer
+
+        // Opretter payload ud fra inputfelterne
         const payload: RegisterPayload = {
             company_name: companyNameRef.current?.value || "",
             email: emailRef.current?.value || "",
@@ -27,15 +38,20 @@ export default function CompanyRegister() {
             phone: Number(phoneRef.current?.value) || 0
         };
 
+        // Sender post-anmodning til API for virksomhedsregistrering
         axiosClient.post('/companyRegister', payload)
+            .then(({ data }) => {
+                setNotification("Company registered successfully, with company number: " + data.id);  // Viser notifikation ved succesfuld registrering
+            })
             .catch(error => {
                 const response = error.response;
                 if (response && response.status === 422) {
-                    setErrors(response.data.errors);
+                    setErrors(response.data.errors);  // Viser fejlbeskeder ved valideringsfejl
                 }
-            })
-    }
+            });
+    };
 
+    // Returnerer formular til virksomhedsregistrering
     return (
         <form onSubmit={onSubmit}>
             <h1 className="title">
@@ -44,17 +60,19 @@ export default function CompanyRegister() {
             {errors && <div className="alert">
                 {Object.keys(errors).map(key => (
                     <p key={key}>{errors[key][0]}</p>
-                ))}
-            </div>
-            }
-            <input type="text" placeholder="Company name"/>
-            <input type="email" placeholder="Email"/>
-            <input type="text" placeholder="Address"/>
-            <input type="number" placeholder="Phone"/>
+                    ))}
+            </div>}
+            {notification && <div className="notification">
+                <p>{notification}</p>
+            </div>}
+            <input ref={companyNameRef} type="text" placeholder="Company name"/>
+            <input ref={emailRef} type="email" placeholder="Email"/>
+            <input ref={addressRef} type="text" placeholder="Address"/>
+            <input ref={phoneRef} type="number" placeholder="Phone"/>
             <button className="btn btn-block">Register</button>
             <p className="message">
                 <Link to="/login">Back to sign in</Link>
             </p>
         </form>
-    )
-}       
+    );
+}

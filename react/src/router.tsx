@@ -1,6 +1,9 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 
 import DefaultLayout from "./components/DefaultLayout.tsx";
+import Calendar from "./views/Calendar.tsx";
+import Profile from "./views/Profile.tsx";
+import Company from "./views/Company.tsx";
 import Users from "./views/Users.tsx";
 
 import GuestLayout from "./components/GuestLayout.tsx";
@@ -10,6 +13,7 @@ import CompanyRegister from "./views/CompanyRegister.tsx";
 
 import NotFound from "./views/NotFound.tsx";
 
+// Opretter routeren med createBrowserRouter fra react-router-dom
 const router = createBrowserRouter([
     {
         path: '/',
@@ -17,11 +21,23 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <Navigate to="/users" />
+                element: <Navigate to="/calendar" /> // Redirect til /calendar stien
+            },
+            {
+                path: '/profile',
+                element: <Profile /> // Viser Profile komponenten ved /profile stien
+            },
+            {
+                path: '/calendar',
+                element: <Calendar /> // Viser Calendar komponenten ved /calendar stien
+            },
+            {
+                path: '/company',
+                element: <Company /> // Viser Company komponenten ved /company stien
             },
             {
                 path: '/users',
-                element: <Users />
+                element: <Users /> // Viser Users komponenten ved /users stien
             }
         ]
     },
@@ -31,22 +47,22 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/login',
-                element: <Login />
+                element: <Login /> // Viser Login komponenten ved /login stien
             },
             {
                 path: '/signup',
-                element: <Signup />
+                element: <Signup /> // Viser Signup komponenten ved /signup stien
             },
             {
                 path: '/companyregister',
-                element: <CompanyRegister />
+                element: <CompanyRegister /> // Viser CompanyRegister komponenten ved /companyregister stien
             }
         ]
     },
     {
         path: '*',
-        element: <NotFound />
+        element: <NotFound /> // Viser NotFound komponenten ved alle andre stier
     }
 ]);
 
-export default router; 
+export default router;

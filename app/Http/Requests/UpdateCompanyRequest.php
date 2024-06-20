@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+namespace App\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class UpdateCompanyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +24,12 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id' => 'required|exists:users,id',
             'company_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:company,email',
-            'address' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:company,email,' . $this->id,
+            'address' => 'nullable|string|max:255',
             'phone' => 'required|numeric|digits:8'
         ];
     }
 }
+

@@ -2,32 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    public $fillable = [
+    use HasFactory;
+
+    protected $table = 'company';
+
+    protected $fillable = [
         'company_name',
         'email',
         'address',
-        'phone'
+        'phone',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    public function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime'
-        ];
-    }
-
+    protected $casts = [
+        'phone' => 'integer',
+    ];
 }
+

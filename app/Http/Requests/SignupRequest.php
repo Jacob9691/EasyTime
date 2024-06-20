@@ -26,7 +26,7 @@ class SignupRequest extends FormRequest
             'surname' => 'required|string|max:55',
             'last_name' => 'required|string|max:55',
             'email' => 'required|email|unique:users,email',
-            'company_number' => 'required|integer|between:1,9999',
+            'company_number' => 'required|integer|exists:company,id',
             'password' => [
                 'required',
                 'confirmed',
